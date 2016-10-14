@@ -1,0 +1,31 @@
+[color]
+        branch = auto
+        diff = auto
+        status = auto
+        ui = true
+[color "branch"]
+        current = yellow reverse
+        local = yellow
+        remote = green
+[color "diff"]
+        meta = yellow bold
+        frag = magenta bold
+        old = red bold
+        new = green bold
+[color "status"]
+        added = yellow bold
+        changed = green bold
+        untracked = cyan bold
+[core]
+        editor = vim
+        pager = less -FXRS -x4
+[alias]
+        history = log --follow --all -p
+        st = status -sb
+        gl = log --oneline --decorate --stat --graph
+        editcommit = commit --amend
+        since = diff --name-only HEAD
+        lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+        last-branch-commit = for-each-ref --shell --format="echo %(refname:short) && git log -n 1 --format=format:\" %%cd%%n %%B\" %(refname)" refs/ | sh
+        ls-subtrees = !"git log | grep git-subtree-dir | cut -d ':' -f2 | sort | uniq"
+        recent = log --graph --stat --date=relative
