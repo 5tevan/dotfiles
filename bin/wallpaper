@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Path to your wallpapers. When you use `wallpaper some_image` the
+# image loaded is $wallpaper/some_image.gif
+wallpaper=/home/me/Wallpapers
+
+# Path to xwinwrap. See build instructions at the bottom of the file.
+xwinwrap=`which xwinwrap`
+
+stop () {
+    killall -q xwinwrap
+}
+
+if [ $# = 0 ]; then
+    echo 1>&2 "Usage: $0 <image>"
+    echo 1>&2 "Random: $0 random"
+    echo 1>&2 "Resize for use: $0 resize input.gif output.gif"
+    echo 1>&2 "Stop: $0 stop"
+    exit 1
+fi
+
+if [ $1 = "resize" ]; then
+    if [ $# -ne 3 ]; then
+	echo 1>&2 "Usage: $0 $1 <image> <output_image>"
+	exit 1
+    fi
+
+    size=`xdpyinfo | awk '/dimensions/{print $2}'`
+    gifsicle -f --resize $size $2 -o $3
+    exit 0
+fi
+
+if [ $1 = "stop" ]; then
+    stop
+    exit 0
+fi
+
+choice="$1"
+
+if [ $1 = "random" ]; then
+    files=($wallpaper/*.gif)
+    file="${files[RANDOM % ${#files[@]}]}"
+    choice=`basename -s .gif $file`
+fi
+
+stop
+
+$xwinwrap -fs -ov -ni -s -nf -- /usr/bin/gifview \
+	  -w WID \
+	  $wallpaper/$choice.gif -a &
+
+exit 0
+
+# Running from Cron
+# ***********************************
+#
+# If you want to run this from cron, you need the following line in your .bashrc
+# > xhost local:<user> > /dev/null
+# where you have replace <user> with your username
+#
+# Install
+# ***********************************
+#
+# > sudo apt install libxext-dev libxrandr-dev xorg-dev bzr build-essential gifsicle
+# > bzr branch lp:xwinwrap
+#
+# On Ubuntu 17.04 this created a build (make wasn't working):
+# > gcc -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls xwinwrap.c -lX11 -lXext -lXrender -o xwinwrap
