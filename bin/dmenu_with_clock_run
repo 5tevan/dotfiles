@@ -1,0 +1,22 @@
+#!/bin/bash
+
+date=`date +"%A %d %b %Y %I:%M %p"`
+
+list=$(cat <<-END
+emacs
+google-chrome
+subl
+END
+)
+
+echo "$list" \
+    | dmenu "$@" \
+	    -i \
+	    -p "$date $temp" \
+	    -fn "Ubuntu Mono-32" \
+	    -nb '#0d2434' \
+	    -nf '#4cc6d7' \
+	    -sb '#7c52c1' \
+	    -sf '#f5515f' \
+    | ${SHELL:-"/bin/bash"} &
+exit
