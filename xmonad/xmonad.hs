@@ -16,6 +16,7 @@ import XMonad.Prompt.Input
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.FadeWindows
 
 import XMonad.Layout.Spiral
 import XMonad.Util.Scratchpad
@@ -57,7 +58,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask,               xK_bracketright) , spawn "amixer -D pulse sset Master 5%+")
     , ((modMask,               xK_bracketleft)  , spawn "amixer -D pulse sset Master 5%-")
     , ((modMask .|. shiftMask, xK_l)            , spawn "slock")
-    , ((modMask              , xK_x)            , spawn "xmodmap ~/.Xmodmap")
 
     -- close focused window
     , ((modMask .|. shiftMask, xK_c     ), kill)
@@ -116,6 +116,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- Quit
     , ((modMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
+
     ]
     ++
 
@@ -139,10 +140,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 main = do
      xmonad $ defaultConfig
        { modMask = mod4Mask -- Use Super instead of Alt
-       , borderWidth = 5
+       , borderWidth = 0
        , normalBorderColor = "#000000"
-       , focusedBorderColor = "#111111"
-       , terminal = "urxvt"
+       -- , focusedBorderColor = "#2E9AFE"
+       , focusedBorderColor = "#000000"
+       , terminal = "terminal"
        , keys = myKeys
        , layoutHook = layout
+       , logHook = fadeWindowsLogHook (composeAll [transparency 0.05
+                                                  , isUnfocused --> transparency 0.1
+                                                  ])
+       , handleEventHook = fadeWindowsEventHook
        }
