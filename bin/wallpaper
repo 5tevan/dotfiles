@@ -66,3 +66,8 @@ exit 0
 #
 # On Ubuntu 17.04 this created a build (make wasn't working):
 # > gcc -Wall -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wredundant-decls xwinwrap.c -lX11 -lXext -lXrender -o xwinwrap
+#
+# Recommended Gifs                                                                                                                                            
+# ***********************************                                                                                                                         
+#                                                                                                                                                             
+# See http://1041uuu.tumblr.com/
